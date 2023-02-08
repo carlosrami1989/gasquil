@@ -14,12 +14,24 @@ use App\Models\Modulos\Parametrizacion\tbResponsable;
 use App\Models\Modulos\Parametrizacion\tbIngresoInfo;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 use App\Models\Modulos\Parametrizacion\tbUsuarioPerfil;
 use Exception;
 
 class Dashboard extends Controller
 {
+    public function ConsultarUsuario(){
+        try {
+            $user = Auth::user();
+             
+           
+                return  response()->json(['user' => $user], 200);
+          
+        } catch (Exception $e) {
+            return response()->json(['msj' => $e->getMessage()], 500);
+        }
+    }
     public function User(){
         try {
           
@@ -38,7 +50,7 @@ class Dashboard extends Controller
         try {
           
 
-            $resultado =tbUsuarioPerfil::where("id_usuario",$id)->get();
+            $resultado =User::where("id",$id)->get();
           
 
             return  response()->json(['data' => $resultado], 200);

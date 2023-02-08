@@ -32,9 +32,9 @@
                         <div class="card-group mb-0">
                             <div class="card p-0">
                                 <div class="card-body">
-                                <img src="{{ asset('img/logo.bmp') }}" alt="" style="width:100%">
+                                <img src="{{ asset('img/logo.bmp') }}" alt="" style="width:70%">
 
-                                    <p class="text-muted">SisGe-Gasquil - Gestion de Estaciones</p>
+                                    <!-- <p class="text-muted">SisGe-Gasquil - Gestion de Estaciones</p> -->
                                     <div class="input-group mb-3">
                                         <span class="input-group-addon"><i class="icon-user"></i></span>
                                         <input type="email" name="email" id="email" class="form-control" :value="old('email')" required autofocus placeholder="Correo Electrónico">
@@ -61,11 +61,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="card text-white py-5 d-md-down-none" 
+                            <div class="card text-white" 
                             >
                             <!-- style="width:44%;background-image: url('{{ asset('img/logo100.jpg') }}'); 
                            background-repeat:no-repeat;background-size: 100% 100%;"> -->
-                                 <img src="{{ asset('img/gasquil.png') }}" alt="" style="width:100%">
+                                 <img src="{{ asset('img/gasquil.png') }}" alt="" style="height:110%"  >
                             </div>
                         </div>
                     </div>

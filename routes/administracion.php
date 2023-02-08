@@ -17,7 +17,22 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
 
     /* SubModulo Medico */
     Route::namespace('Modulos\Administracion')->prefix('paciente')->group(function () {
-        //Modulo de Cirugia
+        //Modulo de tareas
+        Route::get('GetEmpresa', 'TareasController@GetEmpresa');
+
+        Route::get('cargar_persona/{apellidos}', 'PersonaController@ConsultarPersona');
+        Route::post('createTarea', 'TareasController@createTarea');
+        Route::post('createSeguimientoTarea', 'SeguimientoController@createSeguimientoTarea');
+        Route::get('GetTareas', 'TareasController@GetTareas');
+        //GetSeguimiento
+        Route::get('GetSeguimiento/{id_tarea}', 'SeguimientoController@GetSeguimiento');
+
+
+        
+
+
+
+
         Route::get('cargar_paciente/{nombre}', 'PacienteController@ConsultarPaciente');
 
         //Modulo de genero
@@ -62,6 +77,7 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
 
         Route::get('IncipSession/{id}', 'Dashboard@IncipSession');
         Route::get('usuario', 'Dashboard@User');
+        Route::get('usuarioActual', 'Dashboard@ConsultarUsuario');
 
 
 

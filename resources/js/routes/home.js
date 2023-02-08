@@ -7,7 +7,7 @@ import paciente from ".././components/modulos/Administracion/paciente";
 import control_clinico from ".././components/modulos/Medico/index.vue";
 
 import tipodesechos from ".././components/modulos/Parametrizacion/TiposDesechos/index.vue";
-import Clasificacion from ".././components/modulos/Parametrizacion/ClasificacionDesechos/index.vue";
+import Tareas from ".././components/modulos/Administracion/Tareas/Dashboardtareas.vue";
 import DesechosDescripcion from ".././components/modulos/Parametrizacion/DesechosDescripcion/index.vue";
 import ingresodesechos from ".././components/modulos/Administracion/Mantenimiento/index.vue";
 import departamento from ".././components/modulos/Parametrizacion/TiposDesechos/index.vue";
@@ -40,9 +40,9 @@ const home = [{
     },
     {
         path: prefijo +
-            "/modulos/parametrizacion/clasificaciondesechos",
-        name: "Clasificacion de Desechos",
-        component: Clasificacion,
+            "/modulos/parametrizacion/tareas",
+        name: "Tareas",
+        component: Tareas,
 
 
     },

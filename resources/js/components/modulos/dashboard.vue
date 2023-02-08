@@ -1,27 +1,6 @@
 <template>
     <div>
-        <!-- <v-row>
-            <v-col>
-                <v-card>
-                    <v-card-title class="text-h5">
-                        Gestión de Desechos
-                    </v-card-title>
-                    <br />
-                    <br />
-
-                    <v-spacer></v-spacer>
-                    <canvas
-              id="ingresospacientes"
-              height="120px"
-              width="auto"
-              
-             
-            ></canvas>
-                  
-                </v-card>
-            </v-col>
-        </v-row> -->
-
+         
         <v-divider></v-divider>
         <br />
         <v-row dense>
@@ -231,6 +210,11 @@
 </template>
 <script>
 export default {
+    props: {
+        user: {
+            type: Object,
+        },
+    },
     data() {
         return {
             rating1: 5,
@@ -279,9 +263,9 @@ export default {
         };
     },
     mounted() {
-        this.consultasTotales();
-        this.consultasDashboard();
-        this.totalesCirugia();
+        // this.consultasTotales();
+        // this.consultasDashboard();
+        // this.totalesCirugia();
     },
     methods: {
         consultarExcel(value) {
