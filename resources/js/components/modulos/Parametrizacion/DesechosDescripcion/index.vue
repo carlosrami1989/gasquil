@@ -144,16 +144,7 @@
     >
     <v-icon>{{ icono }}</v-icon>
     {{ text }}
-      <!-- <template v-slot:action="{ attrs }">
-        <v-btn
-          color="blue" 
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
-          Close
-        </v-btn>
-      </template> -->
+       
     </v-snackbar>
 </div>
 </template>

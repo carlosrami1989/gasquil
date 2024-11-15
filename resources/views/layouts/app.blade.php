@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests"> 
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <title>{{ config('app.name', 'BSPI') }}</title>
 
@@ -45,12 +45,16 @@
 
     </body>
     <!-- App JS de Vue -->
+    <script src="https://apis.google.com/js/api.js" ></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    
     <script src="{{ asset('js/app.js') }}"></script>
     <!-- Plantilla General de los JS -->
     <script src="{{ asset('js/plantilla.js') }}"></script>
     
-
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet">
+   
  
 <link rel="stylesheet" href="//cdn.materialdesignicons.com/5.4.55/css/materialdesignicons.min.css">
 

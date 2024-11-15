@@ -24,8 +24,14 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
         Route::post('createTarea', 'TareasController@createTarea');
         Route::post('createSeguimientoTarea', 'SeguimientoController@createSeguimientoTarea');
         Route::get('GetTareas', 'TareasController@GetTareas');
+        Route::get('GetTareasNormales', 'TareasController@GetTareasNormales');
+        Route::post('createTareaNormales', 'TareasController@createTareaNormales');
+
         //GetSeguimiento
         Route::get('GetSeguimiento/{id_tarea}', 'SeguimientoController@GetSeguimiento');
+        //´rueba api
+        Route::get('api', 'SeguimientoController@GetApi');
+        Route::get('GetApiAcces', 'SeguimientoController@GetApiAcces');
 
 
         
@@ -78,6 +84,14 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
         Route::get('IncipSession/{id}', 'Dashboard@IncipSession');
         Route::get('usuario', 'Dashboard@User');
         Route::get('usuarioActual', 'Dashboard@ConsultarUsuario');
+        Route::get('GetMes/{estacion}/{mes}/{anio}', 'Dashboard@ConsultarMes');
+        Route::get('GetDia/{estacion}', 'Dashboard@ConsultarDia');
+        Route::get('GetEstacionPorDia/{fecha}', 'Dashboard@ConsultarDiaPorEstacion');
+        Route::post('generacionExcelEstacion', 'Dashboard@createreporteExcel');
+        Route::post('generacionExcelLubricantes', 'Dashboard@createreporteExcelLubricantes');
+        Route::post('generacionExcelLubricantesConso', 'Dashboard@createreporteExcelLubricantesConsolidado');
+        Route::post('generacionExcelLubricantesStockEstacion', 'Dashboard@createreporteExcelLubricantesStockEstacion');
+        Route::post('generacionExcelLubricantesStockVentas', 'Dashboard@createreporteExcelLubricantesStockVentas');
 
 
 
@@ -85,6 +99,21 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
         //dashboard
         Route::get('graficosPorDia', 'Dashboard@ConsultarInformacion');
         Route::get('ConsultaDatos', 'Dashboard@ConsultarDatos');
+        Route::get('ConsultaEstaciones', 'Dashboard@ConsultarEstaciones');
+        Route::get('ConsultaGastosEDS/{estacion}/{mes}/{anio}', 'Dashboard@ConsultarGastosEDS');
+        Route::get('ConsultarVendedorPorEstacion/{mes}/{anio}', 'Dashboard@ConsultarVendedorPorEstacion');
+        Route::get('ConsultarReporte/{estacion}/{fechainicio}/{fechafin}', 'Dashboard@ConsultarReporte');
+        Route::post('ingresoCombustible', 'Dashboard@createCombustible');
+        Route::get('ConsultaGuias', 'Dashboard@ConsultarCombustible');
+        Route::get('ConsultarProveedor', 'Dashboard@ConsultarProveedor');
+        Route::post('createProveedor', 'Dashboard@createProveedor');
+        Route::post('createGastosEstacion', 'Dashboard@createGastosEstacion');
+        Route::get('ConsultarGastosEstacion', 'Dashboard@ConsultarGastosEstacion');
+        Route::get('ConsultarTiposGasto', 'Dashboard@ConsultarTiposGasto');
+        Route::post('createBlindado', 'Dashboard@createBlindado');
+        Route::get('ConsultarBlindado', 'Dashboard@ConsultarBlindado');
+        Route::get('ConsultaGeneral/{mes}/{anio}/{estacion}/', 'Dashboard@ConsultarVendedorPorEstacionFuelCorp');
+        Route::get('ConsultaGeneralFuelcorp/{estacion}/{fechainicio}/{fechafin}', 'Dashboard@ConsultarReporteFuelcorp');
 
         //reporte
 
@@ -96,6 +125,11 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
         Route::post('generacionDocumentoExcel', 'tipo_desechos@createreporteExcel');
 
 
+        //contifico
+        Route::get('GetConsultarBodegas', 'Dashboard@GetBodegasContifico');
+        Route::post('GetDocumentoCompra', 'Dashboard@GetDocumentoCompraFecha');
+        Route::post('GetDocumentoTodoLocales', 'Dashboard@GetDocumentoTodoLocales');
+        Route::post('GetDocumentoCompraAdmin', 'Dashboard@GetDocumentoAdmninVentasFecha');
 
 
 

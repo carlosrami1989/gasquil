@@ -23,6 +23,7 @@ class AppController extends Controller
      */
     public function index()
     {
-        return view('datosGenerales.generalidades.configuracionGeneralidades');
+        //return view('datosGenerales.generalidades.configuracionGeneralidades');
+        return view('layouts.app');
     }
 }

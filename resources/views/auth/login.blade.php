@@ -26,7 +26,7 @@
             </div>
             @endif
             <form method="POST" action="{{ route('login') }}">
-                @csrf
+            {{ csrf_field() }}
                 <div class="row justify-content-center">
                     <div class="col-md-12">
                         <div class="card-group mb-0">

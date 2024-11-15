@@ -16,6 +16,7 @@ class tbUsuarioPerfil extends Model
         'id',
          'id_usuario', 
          'id_perfil', 
+         'estacion', 
           
          'created_at',
          'updated_at',

@@ -14,7 +14,22 @@ import 'vuetify/dist/vuetify.min.css';
 import store from "./vueX/store";
 import "./plugins";
 
-import 'Chart.js';
+
+import VueSweetalert2 from 'vue-sweetalert2';
+
+// If you don't need the styles, do not connect
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+
+//import Paintable from 'vue-paintable';
+
+ 
+
+// require videojs style
+ 
+// import 'vue-video-player/src/custom-theme.css'
+
+
 
 const utf8 = require('utf8');
 Vue.prototype.utf8 = utf8;
@@ -28,6 +43,28 @@ const router = new VueRouter({
     routes,
     mode: 'history',
 });
+
+
+const options = {
+    confirmButtonColor: '#41b882',
+    cancelButtonColor: '#ff7674',
+  };
+  Vue.use(VueSweetalert2, options);
+ 
+
+  // Vue.use(Paintable, {
+  //   // optional methods
+  //   setItem(key, image) {
+  //     localStorage.setItem(key, image);
+  //   },
+  //   // you also can use async
+  //   getItem(key) {
+  //     return localStorage.getItem(key);
+  //   },
+  //   removeItem(key) {
+  //     localStorage.removeItem(key);
+  //   }
+  // });
 
 
 
@@ -52,6 +89,8 @@ Vue.component(
     "paciente-representante",
     require("./components/modulos/Administracion/PacientesComponents/informacionrepresentante.vue").default
 );
+
+ 
 //**  fin */
 new Vue({
     store,

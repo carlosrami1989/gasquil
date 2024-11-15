@@ -27,8 +27,5 @@ Route::group(['prefix' => 'modulos/clinico', 'middleware' => ['auth:web'], 'veri
     });
    });
 
-   $prefijo = config('global.router_prefix');
-   //$prefijo ="";
-    Route::get($prefijo . '/{any}', 'AppController@index')->where('any', '.*');
-    Route::get($prefijo, 'AppController@index')->where('any', '.*');
+  
   

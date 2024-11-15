@@ -10,6 +10,10 @@ export default new Vuex.Store({
         // emergencia_store
     },
     state: {
+       // ApiGasquil:"http://calidad.codeveloper.org/api/",
+       ApiGasquil:"http://181.39.233.108:9212/api/",
+       ApiContifico:"https://api.contifico.com/sistema/api/v1/",
+
         // ruta: '/gestion_mantenimiento/public',
         // patch_web_viewer: '/gestion_mantenimiento/public/',
         // patch_file_pdf: "/gestion_mantenimiento/public/path-to/",
@@ -29,6 +33,8 @@ export default new Vuex.Store({
         //ruta: "/majoma_sistema",
         //CUANDO SE USA SITIO WEB
         ruta: "",
+        tokengasquil:"",
+        tokenContifico:"YlL5LnVsxErqwus5bWJB3Uv8QUR8gVHHpkMvrVjqW3w",
 
         patch_web_viewer: "/",
         patch_file_pdf: "public/path-to/",
@@ -281,6 +287,7 @@ export default new Vuex.Store({
         addRuta(state) {
             state.ruta = state.ruta;
         },
+        
         addWebViewer(state) {
             state.patch_web_viewer = state.patch_web_viewer;
         },
@@ -289,6 +296,10 @@ export default new Vuex.Store({
         },
         addUrlPdf(state) {
             state.url_pdf = state.url_pdf;
+        },
+
+        addTokengasquil(state) {
+            state.tokengasquil = state.tokengasquil;
         },
 
         muStateCleanStoreVueX: function(state) {
@@ -611,6 +622,9 @@ export default new Vuex.Store({
         addUrlPdfAction(context) {
             context.commit("addUrlPdf");
         },
+        addTokengasquilAction(context) {
+            context.commit("addTokengasquil");
+        },
 
         actionStateCleanStoreVueX: function(context) {
             context.commit("muStateCleanStoreVueX", null);
@@ -823,6 +837,9 @@ export default new Vuex.Store({
         },
         getUrlPdf(state) {
             return state.url_pdf;
+        },
+        getTokengasquil(state){
+            return state.tokengasquil;
         },
 
         getStateDocumentoHabilitante: function(state) {
@@ -1087,6 +1104,9 @@ export default new Vuex.Store({
 
         getStateTb2ExamenFisico(state) {
             return state.tb2ExamenFisico;
-        }
+        },
+        // getTokenGasquil(state) {
+        //     return state.tokeGasquil;
+        // },
     }
 });

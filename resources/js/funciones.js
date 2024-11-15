@@ -1,4 +1,61 @@
 export const funcionesGlobales = {
+    MesesNumeros: (number) => {
+        switch (number) {
+            case 1:
+                return "ENERO";
+                break;
+            case 2:
+                return "FEBRERO";
+                break;
+            case 3:
+                return "MARZO";
+                break;
+            case 4:
+                return "ABRIL";
+                break;
+            case 5:
+                return "MAYO";
+                break;
+            case 6:
+                return "JUNIO";
+                break;
+            case 7:
+                return "JULIO";
+                break;
+            case 8:
+                return "AGOSTO";
+                break;
+            case 9:
+                return "SEPTIEMBRE";
+                break;
+            case 10:
+                return "OCTIBRE";
+                break;
+            case 11:
+                return "NOVIEMBRE";
+                break;
+
+            case 12:
+                return "DICIEMBRE";
+                break;
+        }
+
+        if (width <= length) {
+            if (number < 0) {
+                return "-" + numberOutput.toString();
+            } else {
+                return numberOutput.toString();
+            }
+        } else {
+            if (number < 0) {
+                return (
+                    "-" + zero.repeat(width - length) + numberOutput.toString()
+                );
+            } else {
+                return zero.repeat(width - length) + numberOutput.toString();
+            }
+        }
+    },
     //Metodo para Obtener la fecha de actualización de contraseña del usuario
     validarCambioClavePorFecha: (
         usCod,
@@ -19,7 +76,7 @@ export const funcionesGlobales = {
                     fullIdentificacion +
                     "&usCod=" +
                     usCod +
-                    '">Actualizar Contraseña</a>'
+                    '">Actualizar Contraseña</a>',
             });
             //prueba
             return;
@@ -48,7 +105,7 @@ export const funcionesGlobales = {
                     fullIdentificacion +
                     "&usCod=" +
                     usCod +
-                    '">Actualizar Clave</a>'
+                    '">Actualizar Clave</a>',
             });
         }
     },
@@ -57,23 +114,23 @@ export const funcionesGlobales = {
         let form = {
             modulo_nombre: nombreModulo,
             formulario_nombre: nombreForm,
-            accion: accion
+            accion: accion,
         };
         axios
             .post(url, form)
-            .then(function(response) {
+            .then(function (response) {
                 /* console.log("RESPONSE LOG");
                 console.log("LOG REGISTRADO");
                 console.log(response); */
             })
-            .catch(error => {
+            .catch((error) => {
                 //Errores de validación
                 /* console.log("ERRORESSSS");
                 console.log(error); */
                 this.$swal({
                     icon: "error",
                     title: "Existen errores",
-                    text: error
+                    text: error,
                 });
             });
     },
@@ -99,7 +156,7 @@ export const funcionesGlobales = {
         }
     },
     //Metodo para Convertir la Palabra en Mayuscula
-    toCapitalAllWords: palabra => {
+    toCapitalAllWords: (palabra) => {
         if (palabra != null) {
             var valor = palabra.toString();
             return valor.toUpperCase();
@@ -108,7 +165,7 @@ export const funcionesGlobales = {
         }
     },
     //Metodo para Convertir la Primera letra de una Palabra en Mayuscula
-    toCapitalFirstWords: palabra => {
+    toCapitalFirstWords: (palabra) => {
         if (palabra != null) {
             var valor = palabra.toString();
             return valor.charAt(0).toUpperCase() + valor.slice(1).toLowerCase();
@@ -117,7 +174,7 @@ export const funcionesGlobales = {
         }
     },
     //Metodo para Convertir la Primera letra de una Oracion en Mayuscula
-    toCapitalFirstAllWords: palabra => {
+    toCapitalFirstAllWords: (palabra) => {
         if (palabra != null) {
             var pieces = palabra.split(" ");
             for (var i = 0; i < pieces.length; i++) {
@@ -128,5 +185,5 @@ export const funcionesGlobales = {
         } else {
             return (pieces = "");
         }
-    }
+    },
 };

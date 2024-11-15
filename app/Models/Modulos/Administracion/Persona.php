@@ -29,6 +29,7 @@ class Persona extends Model
         'provincia',
         'parroquia',
         'email',
+        'email_corp',
         'tipo_sangre',
         'fecha_na',
         'estado',

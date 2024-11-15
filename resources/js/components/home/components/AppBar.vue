@@ -9,7 +9,7 @@
                         </v-img>
                     </v-list-item-title>
                     <v-list-item-subtitle>
-                        SisGe-Gasquil - Gestion de Estaciones
+                        CORPALVAH - Gestion de Proyectos
                     </v-list-item-subtitle>
                 </v-list-item-content>
             </v-list-item>
@@ -42,7 +42,7 @@
             ></v-app-bar-nav-icon>
 
             <v-toolbar-title>
-                Sistema Gestión de Estaciones de Servicios</v-toolbar-title
+                Sistema Gestión de Proyectos y Servicios</v-toolbar-title
             >
 
             <v-spacer></v-spacer>
@@ -121,22 +121,23 @@ export default {
 
             //     });
         },
-        consultasUsuario() {
-            let that = this;
-            let url =
-                this.$store.getters.getRuta +
-                "/modulos/admision/paciente/cargarUsuario/" +
-                this.$props.user.id;
 
-            axios
-                .get(url)
-                .then(function (response) {
-                    that.usuario = response.data.data;
-                })
-                .catch((error) => {
-                    //Errores de validación
-                });
-        },
+            consultasUsuario() {
+                let that = this;
+                let url =
+                    this.$store.getters.getRuta +
+                    "/modulos/admision/paciente/cargarUsuario/" +
+                    this.$props.user.id;
+
+                axios
+                    .get(url)
+                    .then(function (response) {
+                        that.usuario = response.data.data;
+                    })
+                    .catch((error) => {
+                        //Errores de validación
+                    });
+            },
         consultaPerfil() {
             let that = this;
             let url =
@@ -153,15 +154,69 @@ export default {
                             {
                                 name: "Dashboard",
                                 icon: "mdi-view-dashboard",
-                                ruta: "/",
+                                ruta: "/admin",
                                 color: "primary",
                             },
                             {
-                                name: "Tareas",
+                                name: "Operoil",
+                                icon: "mdi-oil-level",
+                                ruta: "/modulos/bi/operoil",
+                                color: "orange",
+                            },
+                            {
+                                name: "Copemarket",
+                                icon: "mdi-store",
+                                ruta: "/contifico",
+                                color: "green",
+                            },
+                            {
+                                name: "Administradores Contifico",
+                                icon: "mdi-store",
+                                ruta: "/admincontifico",
+                                color: "green",
+                            },
+                            {
+                                name: "Proyectos",
                                 icon: "mdi-certificate",
                                 ruta:
                                     prefix + "/modulos/parametrizacion/tareas",
                                 color: "purple",
+                            },
+                            {
+                                name: "Tareas Normales",
+                                icon: "mdi-clipboard-list-outline",
+                                ruta:
+                                    prefix + "/modulos/parametrizacion/tareasNormales",
+                                color: "purple",
+                            },
+                            {
+                                name: "Ingreso de Gastos",
+                                icon: "mdi-feature-search-outline",
+                                ruta:
+                                    prefix + "/gastosestacion",
+                                color: "red",
+                            },
+                             
+                            {
+                                name: "Ingreso de Combustible",
+                                icon: "mdi-gas-station",
+                                ruta:
+                                    prefix + "/ingresocombustible",
+                                color: "blue",
+                            },
+                            {
+                                name: "Ingreso de Proveedores",
+                                icon: "mdi-store",
+                                ruta:
+                                    prefix + "/proveedores",
+                                color: "red",
+                            },
+                            {
+                                name: "Ingreso de Blindado",
+                                icon: "mdi-bus-articulated-front",
+                                ruta:
+                                    prefix + "/blindado",
+                                color: "green",
                             },
 
                             {
@@ -179,7 +234,31 @@ export default {
                                     prefix +
                                     "/modulos/parametrizacion/clasificaciondesechos",
                                 color: "cyan darken-4",
-                            }
+                            },
+                            // {
+                            //     name: "Copemarket",
+                            //     icon: "mdi-shopping",
+                            //     ruta:
+                            //         prefix +
+                            //         "/modulos/visor/copemarket",
+                            //     color: "amber darken-4",
+                            // },
+                            // {
+                            //     name: "Calidad",
+                            //     icon: "mdi-quality-low",
+                            //     ruta:
+                            //         prefix +
+                            //         "/modulos/calidad",
+                            //     color: "amber",
+                            // },
+                            // {
+                            //     name: "Transporte",
+                            //     icon: "mdi-truck",
+                            //     ruta:
+                            //         prefix +
+                            //         "/modulos/transporte",
+                            //     color: "success",
+                            // }
                             //  {name:'Ingreso de Desechos',icon: 'mdi-clipboard-check', ruta:prefix+'/modulos/administracion/ingreso',color:'green darken-4'},
                             //  //{name:'Asignación de Perfil',icon: 'mdi-account-multiple-plus', ruta:prefix+'',color:'orange darken-4'},
                             //  {name:'Creación de Usuario',icon: 'mdi-account-lock', ruta:prefix+'/modulos/seguridad/registrar',color:'teal'},
@@ -190,11 +269,52 @@ export default {
                         );
                     } else {
                         that.items.push(
-                          {
-                                name: "Dashboard",
-                                icon: "mdi-view-dashboard",
-                                ruta: "/",
-                                color: "primary",
+                        //   {
+                        //         name: "Dashboard",
+                        //         icon: "mdi-view-dashboard",
+                        //         ruta: "/",
+                        //         color: "primary",
+                        //     },
+                        {
+                                name: "Operoil",
+                                icon: "mdi-oil-level",
+                                ruta: "/modulos/bi/operoil",
+                                color: "orange",
+                            },
+                            {
+                                name: "Copemarket",
+                                icon: "mdi-store",
+                                ruta: "/contifico",
+                                color: "green",
+                            },
+                        {
+                                name: "Ingreso de Gastos",
+                                icon: "mdi-feature-search-outline",
+                                ruta:
+                                    prefix + "/gastosestacion",
+                                color: "red",
+                            },
+                             
+                            {
+                                name: "Ingreso de Combustible",
+                                icon: "mdi-gas-station",
+                                ruta:
+                                    prefix + "/ingresocombustible",
+                                color: "blue",
+                            },
+                            {
+                                name: "Ingreso de Proveedores",
+                                icon: "mdi-store",
+                                ruta:
+                                    prefix + "/proveedores",
+                                color: "red",
+                            },
+                            {
+                                name: "Ingreso de Blindado",
+                                icon: "mdi-bus-articulated-front",
+                                ruta:
+                                    prefix + "/blindado",
+                                color: "green",
                             },
                             {
                                 name: "Tareas",
@@ -203,6 +323,14 @@ export default {
                                     prefix + "/modulos/parametrizacion/tareas",
                                 color: "purple",
                             },
+                            {
+                                name: "Tareas Normales",
+                                icon: "mdi-clipboard-list-outline",
+                                ruta:
+                                    prefix + "/modulos/parametrizacion/tareasNormales",
+                                color: "purple",
+                            },
+
                         );
                     }
                     // that.usuario = response.data.data.id_perfil;

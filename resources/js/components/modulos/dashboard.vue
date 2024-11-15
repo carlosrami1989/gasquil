@@ -3,212 +3,114 @@
          
         <v-divider></v-divider>
         <br />
-        <v-row dense>
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
+        <v-row>
+            
+                    
+            <v-col cols="12" sm="6" md="2" class="py-1"
+             v-for="item of ListEstaciones"
+             :key="item.id">
+                <v-card class="pa-5" outlined tile  >
+                    <router-link :to="{ name:'Item' , params: { id: item.id, nombre: item.nombre }}"    > 
                     <v-img
                         src="/img/gasquil.png"
-                        height="200px"
+                       
                     ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>GASQUIL </v-card-subtitle>
-
-                    <v-card-actions>
+                </router-link>        
                      
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                        <v-card-text>
+                            <v-icon large :color="item.color">{{ item.icon }} </v-icon> <b> {{ item.nombre}}</b>
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
-
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
+            <v-col cols="12" sm="6" md="2" class="py-1">
+                <v-card class="pa-2" outlined tile>
+                    <router-link to="/modulos/bi/administracion"> 
+                    
                     <v-img
-                        src="/img/churute.png"
-                        height="200px"
+                    src="/img/next.png"
+                       
                     ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>CHURUTE </v-card-subtitle>
-
-                    <v-card-actions>
-                     
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                </router-link>     
+                        <v-card-text>
+                            <v-icon large color="primary">mdi-fuel</v-icon> Administrador
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
 
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
+            <v-col cols="12" sm="6" md="2" class="py-1">
+                <v-card class="pa-2" outlined tile elevation="15">
+                    <router-link to="/modulos/bi/operoil"> 
+                    
                     <v-img
-                        src="/img/next.png"
-                        height="200px"
+                    src="/img/LogOperoil.png"
+                       
                     ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>GASHOUSE</v-card-subtitle>
-
-                    <v-card-actions>
-                     
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                </router-link>     
+                        <v-card-text>
+                            <v-icon large color="primary">mdi-oil</v-icon> Administrador
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
-
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
+            <!-- <v-col cols="12" sm="2" md="4" class="py-1">
+                <v-card class="pa-2" outlined tile>
+                   
                     <v-img
-                        src="/img/rioverde.png"
-                        height="200px"
+                    src="/img/next.png"
+                       
                     ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>RÍO VERDE</v-card-subtitle>
-
-                    <v-card-actions>
-                     
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                   
+                        <v-card-text>
+                            <v-icon large color="primary">mdi-fuel</v-icon> Cerecita
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
-
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
-                    <v-img
-                        src="/img/next.png"
-                        height="200px"
-                    ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>CERECITA</v-card-subtitle>
-
-                    <v-card-actions>
+            <v-col cols="12" sm="2" md="4" class="py-1">
+                <v-card class="pa-2" outlined tile>
+                    <v-img   src="/img/churute.png"></v-img>
                      
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                        <v-card-text>
+                            <v-icon large color="orange">mdi-fuel </v-icon> Churute
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
-
-            
-            <v-col cols="12" md="4">
-                <!-- la primera card -->
-                <v-card  max-height="344" max-width="350" elevation="24">
-                    <v-img
-                        src="/img/sanfrancisco.png"
-                        height="200px"
-                    ></v-img>
-
-                    <v-card-title>
-                        <v-img src="/img/logo.bmp" class="grey darken-4"  max-height="50"
-                                          max-width="250">
-                        </v-img
-                    ></v-card-title>
-
-                    
-                     <v-card-subtitle> <v-icon color="primary">mdi-fuel </v-icon>SAN FRANCISCO</v-card-subtitle>
-
-                    <v-card-actions>
+            <v-col cols="12" sm="2" md="4" class="py-1">
+                <v-card class="pa-2" outlined tile>
+                    <v-img src="/img/next.png"></v-img>
                      
-                        <v-btn color="orange lighten-2" text>Mas Información   
+                        <v-card-text>
+                            <v-icon large color="blue">mdi-fuel </v-icon> GasHouse
+                        </v-card-text>
                          
-                        </v-btn>
-
-                        <v-spacer></v-spacer>
-
-                        
-                    </v-card-actions>
-
-             
                 </v-card>
-                <!-- fin -->
             </v-col>
+            <v-col cols="12" sm="2" md="4" class="py-1">
+                <v-card class="pa-2" outlined tile>
+                    <v-img src="/img/gasquil.png"></v-img>
+                     
+                        <v-card-text>
+                            <v-icon large color="black">mdi-fuel </v-icon> Carchi
+                        </v-card-text>
+                         
+                </v-card>
+            </v-col>
+  -->
         </v-row>
 
+
+
+       
        
     </div>
     <!-- aqui termina :v -->
 </template>
 <script>
+import { prefix, url } from "../../variables";
+
 export default {
     props: {
         user: {
@@ -219,7 +121,7 @@ export default {
         return {
             rating1: 5,
             rating2: 4.5,
-
+            ListEstaciones:[],
             items: [
                 {
                     text: "Guayaquil",
@@ -237,7 +139,7 @@ export default {
                     color: "green darken-2",
                 },
             ],
-            labels: [],
+           
             chartData: {
                 labels: [],
                 series: [
@@ -260,14 +162,28 @@ export default {
                 total_k_t: 0,
             },
             valor: [],
+            rutas:{
+                guayaquil:"",
+                cerecita:"",
+                gashouse:"",
+                churute:"",
+                carchi:"",
+                sevilla_oro:"",
+            },
         };
     },
     mounted() {
+        this.rutas.guayaquil = prefix + "/modulos/bi/dashboardGasquil";
+        this.consultasEstaciones();
+       
         // this.consultasTotales();
         // this.consultasDashboard();
-        // this.totalesCirugia();
+        // this.totalesCirugia();g
     },
     methods: {
+        EnviarId(value){
+            console.log("value",value);
+        },
         consultarExcel(value) {
             // console.log(value);
 
@@ -277,19 +193,30 @@ export default {
             );
         },
 
-        consultasTotales() {
+        consultasEstaciones() {
             let that = this;
             let url =
                 this.$store.getters.getRuta +
-                "/modulos/admision/paciente/ConsultaDatos";
-
+                "/modulos/admision/paciente/ConsultaEstaciones";
+            let ListEstacionesRecorrer = [];
             axios
                 .get(url)
-                .then(function (response) {
+                .then((response) => {
+                 
+                    ListEstacionesRecorrer = response.data.Resp;
+                   // console.log("ListaEstaciones1",ListEstacionesRecorrer);
                     //  that.valor = response.data.data;
-                    that.datos.total_r = response.data.toal_registro;
-                    that.datos.total_k_d = response.data.kilos_dia;
-                    that.datos.total_k_t = response.data.kilos_total;
+                   
+                     ListEstacionesRecorrer.forEach(element => {
+                        let objeto = {};
+                        objeto.id = element.id;
+                        objeto.nombre = element.descripcion;
+                        objeto.icon = "mdi-fuel";
+                        objeto.color = "primary";
+                        this.ListEstaciones.push(objeto);
+                     });
+                    
+                     //console.log("ListaEstaciones2",this.ListEstaciones);
                 })
                 .catch((error) => {
                     //Errores de validación
