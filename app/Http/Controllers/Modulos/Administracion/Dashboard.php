@@ -34,6 +34,9 @@ use App\Models\Modulos\Parametrizacion\tb_tipo_gasto;
 use App\Models\Modulos\Parametrizacion\tb_blindado;
 use App\Models\Modulos\Parametrizacion\tb_resumen_dolares;
 use App\Models\Modulos\Parametrizacion\tb_resumen_galones;
+use App\Models\Modulos\Parametrizacion\tb_cuadre_caja;
+
+use Carbon\Carbon;
 
 
 use App\Exports\UsersExport;
@@ -44,6 +47,337 @@ use Exception;
 
 class Dashboard extends Controller
 {
+    public function GetDocumentoArqueoFecha(Request $request)
+    {
+
+        try {
+
+
+
+
+
+
+
+            $user = Auth::user();
+            $data_desde = date( $request->fecha_inicial);
+            $data_hasta = date( $request->fecha_final);
+            $desde = date("d/m/Y", strtotime($data_desde));   
+            $hasta = date("d/m/Y", strtotime($data_hasta));   
+            //$hasta = date("d/m/Y",$request->fecha_final);
+            $bodega_id = $request->bodega_id;
+
+ 
+ 
+
+            $url_ventas = "https://api.contifico.com/sistema/api/v1/registro/documento/?tipo_registro=CLI&fecha_inicial=".$desde."&fecha_final=".$hasta."&bodega_id=".$bodega_id;
+
+          
+ 
+          //  $response_ventas = "";
+            $response_ventas = $this->makeRequest('GET', $url_ventas);
+
+            $ListaColeVentas = collect($response_ventas);
+           // $ListaColeCompras = collect($response);
+
+            $ListProductosVentas = array();
+            foreach ($response_ventas as   $item) {
+                foreach ( $item["detalles"] as   $item_pro) {
+                    if ( $item["tipo_documento"] != "DNA") {
+                    $myObj = new stdClass();
+                    $myObj->centro_costo_id = $item_pro["centro_costo_id"];
+                    $myObj->producto_id =$item_pro["producto_id"];
+                    $myObj->producto_nombre =$item_pro["producto_nombre"];
+                    $myObj->cantidad =$item_pro["cantidad"];
+                    $myObj->precio =$item_pro["precio"];
+                    $ListProductosVentas[] = $myObj;
+                    }
+                }
+            }
+            //top 10 de mas vendidos
+            $ListaColeProductos = collect($ListProductosVentas);
+            //realizo la agrupacion
+           
+
+            //recorro la lista mapeada
+           
+           
+
+            //mejor vendedor
+
+        
+            // return response()->json([                
+            //     'ventas' => $ListMejorVendedor ,
+            //     'ListaColeVentas' => $ListaColeVentas ,
+            // ], 200);
+           
+            //top 10 de mas vendidos
+          
+ 
+
+           
+            $suma=0;
+
+            
+
+
+
+            // $ListaCollectionBodega = $ListaCollectionBodega->filter(function($item){
+            //     return strpos($item['nombre'], 'Ventas') !== false;
+                
+            // });
+
+              //arqueo de caja
+
+           
+              $ListaArqueoCaja = array();
+              foreach ($response_ventas as   $item) {
+   
+                  if ( $item["tipo_documento"] != "DNA") {
+
+                      # code...
+                      if ($item["anulado"] != true) {
+                      $myObj = new stdClass();
+
+
+                      $myObj->fecha_creacion = $item["fecha_creacion"];
+                      $myObj->fecha_emision = $item["fecha_emision"];
+                      $myObj->hora_emision = $item["hora_emision"];
+                      $myObj->tipo_documento = $item["tipo_documento"];
+                      $myObj->documento = $item["documento"];
+                      $myObj->tipo_documento = $item["tipo_documento"];
+                      $myObj->anulado = $item["anulado"];
+  
+                     if ($item["anulado"] != true) {
+                      if ($item["vendedor"] != "") {
+                          # code...
+                      //     $myObj->id = $item["vendedor"];
+                      // $myObj->itemidid = $item["id"];
+  
+                      $myObj->id = $item["vendedor"]["id"]!= null?$item["vendedor"]["id"]:"no id";
+                      $myObj->cedula =$item["vendedor"]["cedula"] != null?$item["vendedor"]["cedula"]:"no tiene cedula";
+                      $myObj->razon_social = $item["vendedor"]["razon_social"] ;
+                    
+                      }
+                     
+                     }
+
+                       
+                    //  $myObj->total =$item["total"] ;
+                    //  $ListaArqueoCaja[] = $myObj;
+                    if (count($item["cobros"]) > 1 ) {
+                        foreach ($item["cobros"]  as  $value) {
+                            # code...
+                            if ($value["forma_cobro"] == "CAJA") {
+                                $myObj->EFECTIVO =$value["forma_cobro"] ;
+                                $myObj->monto_caja =$value["monto"] ;
+                            }
+                            if ($value["forma_cobro"] == "TC") {
+                                $myObj->TC =$value["forma_cobro"] ;
+                                $myObj->monto_tc =$value["monto"] ;
+                            }
+                            //  $myObj->total =$item["total"] ;
+                         }
+    
+                    }else{
+                        foreach ($item["cobros"]  as  $value) {
+                            # code...
+                            if ($value["forma_cobro"] == "CAJA") {
+                                $myObj->EFECTIVO =$value["forma_cobro"] ;
+                                $myObj->monto_caja =$value["monto"] ;
+                                $myObj->TC ="TC";
+                                $myObj->monto_tc ="0" ;
+                            } 
+                            if ($value["forma_cobro"] == "TC") {
+                                $myObj->TC =$value["forma_cobro"] ;
+                                $myObj->monto_tc =$value["monto"] ;
+                                $myObj->EFECTIVO = "CAJA" ;
+                                $myObj->monto_caja ="0";
+                            } 
+                            //  $myObj->total =$item["total"] ;
+                         }
+                    }
+                    $myObj->total =$item["total"] ;
+
+                     $ListaArqueoCaja[] = $myObj;
+                   
+   
+  
+                    
+                    }
+                  } 
+              }
+
+               //cuadre de caja
+            $ListaCollectionArqueCaja = collect($ListaArqueoCaja);
+            //realizo la agrupacion
+              $ListaCollectionArqueCajaPrimer = $ListaCollectionArqueCaja->whereBetween('hora_emision', ["00:00:00", "06:00:00"]);
+              // SEGUNDO TURNO
+              $ListaCollectionArqueCajaSegundo = $ListaCollectionArqueCaja->whereBetween('hora_emision', ["06:00:00", "14:00:00"]);
+              // TERCER TURNO
+              $ListaCollectionArqueCajaTercer = $ListaCollectionArqueCaja->whereBetween('hora_emision', ["14:00:00", "22:00:00"]);
+              // TERCER TURNO 2
+              $ListaCollectionArqueCajaTercerDos = $ListaCollectionArqueCaja->whereBetween('hora_emision', ["22:00:00", "23:59:59"]);
+            //primer turno
+             $ListaMejorArqueCajaEnviarPrimer = $ListaCollectionArqueCajaPrimer->groupBy('id')->sortByDesc('total');
+            // //mapeo la lista
+             $ListaMejorArqueCajaPrimer = $ListaMejorArqueCajaEnviarPrimer->map(function($roomHistories, $key) {
+                
+                return ["sum_total" => round($roomHistories->sum('total'),2),
+                "monto_tc" => round($roomHistories->sum('monto_tc'),2),
+                "monto_caja" => round($roomHistories->sum('monto_caja'),2),
+                "TURNO_1" => "TURNO_1",
+                "id" => $roomHistories[0]->id,
+                 "vendedor" => $roomHistories[0]->razon_social,
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_1")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                // "fecha_conve" =>Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString()
+                ];
+               
+            });
+
+            //segundo turno
+            $ListaMejorArqueCajaEnviarSegundo = $ListaCollectionArqueCajaSegundo->groupBy('id')->sortByDesc('total');
+            // //mapeo la lista
+             $ListaMejorArqueCajaSegundo = $ListaMejorArqueCajaEnviarSegundo->map(function($roomHistories, $key) {
+                
+                return ["sum_total" => round($roomHistories->sum('total'),2),
+                "monto_tc" => round($roomHistories->sum('monto_tc'),2),
+                "monto_caja" => round($roomHistories->sum('monto_caja'),2),
+                "TURNO_2" => "TURNO_2",
+                "id" => $roomHistories[0]->id,
+                 "vendedor" => $roomHistories[0]->razon_social,
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_2")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
+               
+            });
+
+             //tercero turno
+             $ListaMejorArqueCajaEnviarTercero = $ListaCollectionArqueCajaTercer->groupBy('id')->sortByDesc('total');
+             // //mapeo la lista
+              $ListaMejorArqueCajaTercero = $ListaMejorArqueCajaEnviarTercero->map(function($roomHistories, $key) {
+                 
+                 return ["sum_total" => round($roomHistories->sum('total'),2),
+                 "monto_tc" => round($roomHistories->sum('monto_tc'),2),
+                 "monto_caja" => round($roomHistories->sum('monto_caja'),2),
+                 "TURNO_3" => "TURNO_3",
+                 "id" => $roomHistories[0]->id,
+                 "vendedor" => $roomHistories[0]->razon_social,
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_3")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
+                
+             });
+
+             //tercero turno dos
+             $ListaMejorArqueCajaEnviarTercerDos = $ListaCollectionArqueCajaTercerDos->groupBy('id')->sortByDesc('total');
+             // //mapeo la lista
+              $ListaMejorArqueCajaTercerDos = $ListaMejorArqueCajaEnviarTercerDos->map(function($roomHistories, $key) {
+                 
+                 return ["sum_total" => round($roomHistories->sum('total'),2),
+                 "monto_tc" => round($roomHistories->sum('monto_tc'),2),
+                 "monto_caja" => round($roomHistories->sum('monto_caja'),2),
+                 "TURNO_3_2" => "TURNO_3_2",
+                 "id" => $roomHistories[0]->id,
+                 "vendedor" => $roomHistories[0]->razon_social,
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_3_2")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
+                
+             });
+ 
+
+            
+          
+            return response()->json([
+               
+                'ListaArqueoCaja' => $ListaMejorArqueCajaPrimer ,
+                'ListaMejorArqueCajaSegundo' => $ListaMejorArqueCajaSegundo ,
+                'ListaMejorArqueCajaTercero' => $ListaMejorArqueCajaTercero ,
+                'ListaMejorArqueCajaEnviarTercerDos' => $ListaMejorArqueCajaTercerDos ,
+                //'bodegas' => $ListTotalVentasLocales ,
+              
+
+            ], 200);
+        } catch (Exception $e) {
+            return response()->json(['mensaje' => $e->getMessage()], 500);
+            //throw $th;
+        }
+    }
+
+    public function createCuadreCaja(Request $request)
+    {
+
+        try {
+            //code.
+            $fechaActual = Carbon::now();
+            $user = Auth::user();
+            $fecha_emision =  date( $request->fecha_emision);
+           $fecha_emision_e =   Carbon::createFromFormat('d/m/Y', $fecha_emision)  ;
+
+
+          // $listValidar = tb_cuadre_caja::where('fecha_emision',$fecha_emision_e)->where('turno',$request->turno)
+
+          // $date = Carbon::createFromFormat('d/m/Y', $request->fecha_emision); ;
+          // $date = $date->format('Y-m-d');
+            // $fecha_emision = date("d/m/Y", strtotime($request->fecha_emision));   
+           // $data_hasta = date( $request->fecha_emision.'00:00:00');
+           // $desde = date('Y-m-d H:i:s', strtotime($request->fecha_emision)); 
+            // $var = tbIngresoInfo::All();
+            
+           // return  response()->json(['data' =>   date( $fecha_emision_e)], 200);
+            $crear = tb_cuadre_caja::UpdateOrCreate(
+                [
+                    'id' => $request->id,
+                ],
+                [
+                    'fecha_emision' =>$fecha_emision_e ,
+                    'id_cajero' => $request->id_cajero,
+                    'turno' => $request->turno,
+                    'cajero' => $request->cajero,
+                    'id_bodega' => $request->id_bodega,
+                    'id_bodega_sistema' => $request->id_bodega_sistema,
+                    'saldo_efectivo' => $request->saldo_efectivo,
+                    'monto_caja' => $request->monto_caja,
+                    'monto_tc' => $request->monto_tc,
+                    'sum_total' => $request->sum_total,
+                    'total_fisico' => $request->total_fisico,                     
+                    'diferencia' =>  $request->diferencia,
+                    'observacion' =>  $request->observacion,
+                    'user_create' =>  $user->id,
+                    'user_update' =>  $user->id,
+                    'created_at' =>  $fechaActual,
+                    'updated_at' =>  $fechaActual,
+                    
+                ]
+
+            );
+         
+             
+            $wasCreated = $crear->wasRecentlyCreated;
+
+
+
+
+            return response()->json(['mensaje' => $wasCreated,
+            'data' => $wasCreated], 200);
+        } catch (Exception $e) {
+            return response()->json(['mensaje' => $e->getMessage()], 500);
+            //throw $th;
+        }
+    }
     public function GetDocumentoAdmninVentasFecha(Request $request)
     {
 
@@ -210,7 +544,9 @@ class Dashboard extends Controller
               foreach ($response_ventas as   $item) {
    
                   if ( $item["tipo_documento"] != "DNA") {
+
                       # code...
+                      if ($item["anulado"] != true) {
                       $myObj = new stdClass();
 
 
@@ -220,7 +556,7 @@ class Dashboard extends Controller
                       $myObj->tipo_documento = $item["tipo_documento"];
                       $myObj->documento = $item["documento"];
                       $myObj->tipo_documento = $item["tipo_documento"];
-                      $myObj->tipo_documento = $item["tipo_documento"];
+                      $myObj->anulado = $item["anulado"];
   
                      if ($item["anulado"] != true) {
                       if ($item["vendedor"] != "") {
@@ -275,17 +611,10 @@ class Dashboard extends Controller
 
                      $ListaArqueoCaja[] = $myObj;
                    
-  
-  
-                      // $myObj->id =$item["vendedor"]["id"];
-                      // $myObj->cedula = "no tiene cedula";
-                      // $myObj->razon_social = 0 ;
-                      // $myObj->adicional1_cliente =0;
-                      // $myObj->total =0 ;
-  
+   
   
                     
-  
+                    }
                   } 
               }
 
@@ -310,7 +639,13 @@ class Dashboard extends Controller
                 "TURNO_1" => "TURNO_1",
                 "id" => $roomHistories[0]->id,
                  "vendedor" => $roomHistories[0]->razon_social,
-                 "fecha_emision" => $roomHistories[0]->fecha_emision];
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_1")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                // "fecha_conve" =>Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString()
+                ];
                
             });
 
@@ -325,7 +660,12 @@ class Dashboard extends Controller
                 "TURNO_2" => "TURNO_2",
                 "id" => $roomHistories[0]->id,
                  "vendedor" => $roomHistories[0]->razon_social,
-                 "fecha_emision" => $roomHistories[0]->fecha_emision];
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_2")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
                
             });
 
@@ -340,7 +680,12 @@ class Dashboard extends Controller
                  "TURNO_3" => "TURNO_3",
                  "id" => $roomHistories[0]->id,
                  "vendedor" => $roomHistories[0]->razon_social,
-                 "fecha_emision" => $roomHistories[0]->fecha_emision];
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_3")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
                 
              });
 
@@ -355,7 +700,12 @@ class Dashboard extends Controller
                  "TURNO_3_2" => "TURNO_3_2",
                  "id" => $roomHistories[0]->id,
                  "vendedor" => $roomHistories[0]->razon_social,
-                 "fecha_emision" => $roomHistories[0]->fecha_emision];
+                 "fecha_emision" => $roomHistories[0]->fecha_emision,
+                 "existe" => tb_cuadre_caja::where('turno',"TURNO_3_2")
+                 ->where('fecha_emision', Carbon::createFromFormat('d/m/Y', date($roomHistories[0]->fecha_emision))->toDateString() )
+                  ->where('id_cajero', $roomHistories[0]->id)
+                 ->first(),
+                ];
                 
              });
  

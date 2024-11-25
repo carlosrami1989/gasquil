@@ -130,7 +130,8 @@ Route::group(['prefix' => 'modulos/admision', 'middleware' => ['auth:web'], 'ver
         Route::post('GetDocumentoCompra', 'Dashboard@GetDocumentoCompraFecha');
         Route::post('GetDocumentoTodoLocales', 'Dashboard@GetDocumentoTodoLocales');
         Route::post('GetDocumentoCompraAdmin', 'Dashboard@GetDocumentoAdmninVentasFecha');
-
+        Route::post('GetDocumentoArqueo', 'Dashboard@GetDocumentoArqueoFecha');
+        Route::post('GrabarArqueo', 'Dashboard@createCuadreCaja');
 
 
 

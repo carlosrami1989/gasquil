@@ -238,11 +238,30 @@
                     >
                       mdi-select-all
                     </v-icon>
+                    
                   </v-col>
                 </v-row>
               </template>
             </v-data-table>
           </v-card-text>
+          <v-card-actions>
+            <v-col>
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-btn
+                        color="green"
+                        dark
+                        v-bind="attrs"
+                        v-on="on"
+                        @click="GenerarDocumentoExcelStockVentas()"
+                      >
+                        <v-icon>mdi-file-excel-box</v-icon>
+                      </v-btn>
+                    </template>
+                    <span>Generar Excel</span>
+                  </v-tooltip>
+                </v-col>
+          </v-card-actions>
         </v-card>
       </v-col>
      
@@ -343,29 +362,107 @@
               <template v-slot:[`item.acciones`]="{ item }">
                 <v-row>
                   <v-col cols="6">
-                    <v-icon
-                      color="indigo"
-                      @click="GenerarModalProductosFacturaCompra(item)"
-                      class="mr-2"
-                    >
-                      mdi-select-all
+                   
+                    <v-btn
+                    v-if="item.existe != null"
+                    class="mx-2"
+                    fab
+                     
+                    small
+                    icon
+                    
+                    color="pink"
+                    disabled
+                  >
+                    <v-icon dark>
+                      mdi-content-save-all
                     </v-icon>
+                  </v-btn>
+                  <v-btn
+                  v-else
+                    class="mx-2"
+                    fab
+                    dark
+                    small
+                    icon
+                    @click="ModalArqueo(item)"
+                    color="pink"
+                  >
+                    <v-icon dark>
+                      mdi-content-save-all
+                    </v-icon>
+                  </v-btn>
                   </v-col>
+                  <v-col cols="6">
+                   
+                   <v-btn
+                   class="mx-2"
+                   fab
+                   dark
+                   small
+                   @click="ModalArqueoObservacion(item)"
+                   color="blue"
+                 >
+                   <v-icon dark>
+                   mdi-magnify
+                   </v-icon>
+                 </v-btn>
+                 </v-col>
                 </v-row>
               </template>
               <template v-slot:[`item.total_fisico`]="{ item }">
                 <v-row>
-                  <v-col cols="6">
+                  <v-col cols="8" v-if="item.existe == null">
                     <v-text-field
-                      name="name"
-                      label="label"
+                     type="number"
                       id="id"
-                      
-                    >{{ item.total_fisico  }}</v-text-field>
+                       prefix="$"
+                      v-model="item.total_fisico"
+                    > </v-text-field>
+                   
+                  </v-col>
+                  <v-col cols="8"  v-else>
+                    {{ parseFloat(item.existe["total_fisico"]).toFixed(2)  }}
                    
                   </v-col>
                 </v-row>
               </template>
+              <template v-slot:[`item.diferencia`]="{ item }">
+                <v-row>
+                  <v-col cols="8" v-if="item.existe == null">
+                   <div v-show="false">
+                   {{ item.diferencia = (parseFloat(item.monto_caja )  -  parseFloat(item.total_fisico )) }}
+                   </div>
+                      {{ parseFloat(item.diferencia).toFixed(2)  }}
+                   
+                 
+                   
+                  </v-col>
+                  <v-col cols="8" v-else>
+                   <div v-show="false">
+                   {{ item.diferencia = item.existe["diferencia"] }}
+                   </div>
+                      {{ parseFloat(item.diferencia).toFixed(2)  }}
+                   
+                 
+                   
+                  </v-col>
+                </v-row>
+              </template>
+              <!-- <template v-slot:[`item.observacion`]="{ item }">
+                <v-row>
+                  <v-col cols="8">
+                   
+                   
+                    <v-text-field
+                     
+                      id="id"
+                      v-model="item.observacion"
+                    > </v-text-field>
+                   
+                  </v-col>
+                </v-row>
+              </template> -->
             </v-data-table>
           </v-card-text>
           <div style="min-height: 4px">
@@ -430,57 +527,7 @@
       </v-col>
     </v-row>
 
-    <!-- <v-row no-gutters>
-      <v-col cols="12" sm="12" class="pa-1">
-        <v-card
-          :loader-height="5"
-          :loading="loading"
-          outlined
-          tile
-          elevation="8"
-          class="rounded-lg"
-        >
-          <v-system-bar color="indigo darken-2" dark class="white--text"
-            >Mejor Vendedor por estacion</v-system-bar
-          >
-
-          <v-card-text>
-            <canvas
-              id="VentasMejorPorEstaciones"
-              width="200"
-              height="100"
-            ></canvas>
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row> -->
-    <!-- <v-row no-gutters>
-         
-  
-        <v-col cols="12" sm="12" class="pa-1">
-          <v-card
-            :loader-height="5"
-            :loading="loading"
-            outlined
-            tile
-            elevation="8"
-            class="rounded-lg"
-          >
-            <v-system-bar color="indigo darken-2" dark class="white--text"
-              >Mejor Vendedor por estacion Por Cantidad</v-system-bar
-            >
-  
-            <v-card-text>
-              <canvas
-                id="VentasMejorPorEstacionesCantidad"
-                width="200" height="100"
-              ></canvas>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row> -->
-    <!-- fin de las lista -->
-
+   
     <!-- dialogo -->
     <v-row justify="center">
       <v-dialog v-model="ModelProductoCaducado" persistent max-width="600px">
@@ -500,6 +547,68 @@
               color="blue darken-1"
               text
               @click="ModelProductoCaducado = false"
+            >
+              Cerrar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+     <!-- dialogo -->
+     <v-row justify="center">
+      <v-dialog v-model="ModelObservacionView" persistent max-width="600px">
+        <v-card>
+          <v-card-title primary-title> Observación </v-card-title>
+          <v-card-text>
+            <v-textarea
+          solo
+          v-model="ListCuadre.observacion"
+          name="input-7-4"
+          label="Observación"
+          disabled
+        ></v-textarea>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+           
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="ModelObservacionView = false"
+            >
+              Cerrar
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+     <!-- dialogo -->
+     <v-row justify="center">
+      <v-dialog v-model="ModelObservacion" persistent max-width="600px">
+        <v-card>
+          <v-card-title primary-title>Ingrese Observación </v-card-title>
+          <v-card-text>
+            <v-textarea
+          solo
+          v-model="ListCuadre.observacion"
+          name="input-7-4"
+          label="Observación"
+           
+        ></v-textarea>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn
+              color="blue"
+              text
+              @click="GrabarArqueCaja()"
+            >
+              Grabar
+            </v-btn>
+            <v-btn
+              color="blue darken-1"
+              text
+              @click="ModelObservacion = false"
             >
               Cerrar
             </v-btn>
@@ -652,147 +761,10 @@ export default {
       searchVentasStockEstaciones: "",
       searchStockEstaciones: "",
 
-      CabeceraEstacione: [
-        {
-          text: "Estación",
-          align: "start",
-
-          value: "des_estacion",
-          class: "yellow darken-2 white--text",
-        },
-        {
-          text: "Fecha",
-          value: "Fecha",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "Cliente",
-          value: "Nombre",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "MontoDolares",
-          value: "MontoDolares",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "numerofactura",
-          value: "numerofactura",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "Vendedor",
-          value: "Vendedor",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "DesProducto",
-          value: "DesProducto",
-          class: "yellow darken-2 white--text ",
-        },
-        {
-          text: "Cantidad",
-          value: "Cantidad",
-          class: "yellow darken-2 white--text ",
-        },
-
-        {
-          text: "Precio",
-          value: "Precio",
-          class: "yellow darken-2 white--text",
-        },
-        {
-          text: "MontoDolaresDes",
-          value: "MontoDolaresDes",
-          class: "yellow darken-2 white--text",
-        },
-        {
-          text: "Fecha Actualizacion",
-          value: "created_at",
-          class: "yellow darken-2 white--text",
-        },
-      ],
-      ListaConsolidadoEstaciones: [],
-
-      CabeceraProductoConsolidado: [
-        {
-          text: "Estación",
-          align: "start",
-
-          value: "estacion",
-          class: "indigo darken-2 white--text",
-        },
-        {
-          text: "Producto",
-          value: "producto",
-          class: "indigo darken-2 white--text ",
-        },
-        {
-          text: "Cantidad",
-          value: "Total_cantidad",
-          class: "indigo darken-2 white--text ",
-        },
-        {
-          text: "MontoDolares",
-          value: "Total_dolares",
-          class: "indigo darken-2 white--text ",
-        },
-      ],
-      ListaConsolidadoProducto: [],
-
-      //StockVentas
-      CabeceraVentasStockEstaciones: [
-        {
-          text: "Estación",
-          align: "start",
-
-          value: "estacion",
-          class: "indigo darken-2 white--text",
-        },
-        {
-          text: "Descripcion",
-          value: "producto",
-          class: "indigo darken-2 white--text ",
-        },
-        {
-          text: "stock",
-          value: "stock",
-          class: "indigo darken-2 white--text ",
-        },
-        {
-          text: "facturado",
-          value: "facturado",
-          class: "indigo darken-2 white--text ",
-        },
-        { text: "total", value: "total", class: "red red-2 white--text " },
-        {
-          text: "estado",
-          value: "estado",
-          class: "indigo darken-2 white--text ",
-        },
-      ],
-      ListaVentasStockEstaciones: [],
-      //StockVentasEstaciones
-      CabeceraStockEstaciones: [
-        {
-          text: "Estación",
-          align: "start",
-
-          value: "des_estacion",
-          class: "indigo darken-2 white--text",
-        },
-        {
-          text: "Descripcion",
-          value: "Descripcion",
-          class: "indigo darken-2 white--text ",
-        },
-        {
-          text: "stock",
-          value: "Cantidad",
-          class: "indigo darken-2 white--text ",
-        },
-      ],
-      ListaStockEstaciones: [],
+     
+ 
+       
+      
       ///
       /**chart dia */
       IndiceVentasEstaciones: [],
@@ -853,6 +825,8 @@ export default {
         bodega_id: 0,
       },
       ModelProductoCaducado: false,
+      ModelObservacion: false,
+      ModelObservacionView: false,
       CabeceraProducto: [
         {
           text: "producto_nombre",
@@ -885,70 +859,7 @@ export default {
         show: true,
         interval: 0,
       },
-      // CabeceraDocumentoVentas: [
-      //   {
-      //     text: "documento",
-      //     align: "start",
-
-      //     value: "documento",
-      //     class: "yellow darken-2 white--text",
-      //   },
-      //   {
-      //     text: "tipo_documento",
-      //     align: "start",
-
-      //     value: "tipo_documento",
-      //     class: "yellow darken-2 white--text",
-      //   },
-      //   {
-      //     text: "fecha_creacion",
-      //     align: "start",
-
-      //     value: "fecha_creacion",
-      //     class: "yellow darken-2 white--text",
-      //   },
-      //   {
-      //     text: "fecha_emision",
-      //     value: "fecha_emision",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "tipo_documento",
-      //     value: "tipo_documento",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "tipo_registro",
-      //     value: "tipo_registro",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "persona",
-      //     value: "persona.razon_social",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "Vendedor",
-      //     value: "vendedor.razon_social",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "cedula",
-      //     value: "persona.cedula",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "adicional1_cliente",
-      //     value: "persona.adicional1_cliente",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      //   {
-      //     text: "Acciones",
-      //     value: "acciones",
-      //     class: "yellow darken-2 white--text ",
-      //   },
-      // ],
-      // ListaDocumentoVentas: [],
+      
       searchBusquedaProductoventas: "",
       pagination: {
         current: 1,
@@ -988,6 +899,11 @@ export default {
           text: "fecha_emision",
           value: "fecha_emision",
           class: "yellow darken-2 white--text ",
+        },
+        {
+          text: "hora de Emision",
+          value: "hora_emision",
+          class: "blue darken-2 white--text ",
         },
         {
           text: "tipo_documento",
@@ -1115,6 +1031,7 @@ export default {
           value: "diferencia",
           class: "yellow darken-2 white--text ",
         },
+         
         {
           text: "Acciones",
           value: "acciones",
@@ -1122,6 +1039,22 @@ export default {
         },
       ],
       ListaDocumentoCuadreCaja: [],
+      ListCuadre:{
+        id:0,
+        fecha_emision:0,
+        id_cajero:0,
+        turno:0,
+        cajero:0,
+        id_bodega:0,
+        id_bodega_sistema:0,
+        saldo_efectivo:0,
+        monto_caja:0,
+        monto_tc:0,
+        sum_total:0,
+        total_fisico:0,
+        diferencia:0,
+        observacion:0,
+      }
     };
   },
   mounted() {
@@ -1137,6 +1070,267 @@ export default {
     //this.GenerarToken();
   },
   methods: {
+    ModalArqueoObservacion(item){
+    console.log(item);
+    
+   
+    this.ListCuadre.observacion=item.existe.observacion;
+
+     
+      this.ModelObservacionView = true;
+
+    
+  },
+    consultasFechaArqueoCaja() {
+      let that = this;
+      this.cargarProgres();
+
+      this.ListaConsultaDocumentoCaducidad.fecha_inicial = this.fecha_buscar;
+      this.ListaConsultaDocumentoCaducidad.fecha_final =
+        this.fecha_buscar_hasta;
+      // this.ListaConsultaDocumentoCaducidad.bodega_id= this.ListaBodegas;
+      // this.cargarProgres();
+      let url =
+        this.$store.getters.getRuta +
+        "/modulos/admision/paciente/GetDocumentoArqueo";
+
+      
+ 
+
+      this.ListaDocumentoCuadreCaja = [];
+      let ListDocumentoCuadreCajaArrayPrimer = [];
+      let ListDocumentoCuadreCajaArraySegundo = [];
+      let ListDocumentoCuadreCajaArrayTercer = [];
+      let ListDocumentoCuadreCajaArrayTercerDos = [];
+
+      this.loading = true;
+      axios
+        .post(url, this.ListaConsultaDocumentoCaducidad)
+        .then((response) => {
+          
+          
+          ListDocumentoCuadreCajaArrayPrimer = response.data.ListaArqueoCaja;
+          ListDocumentoCuadreCajaArraySegundo = response.data.ListaMejorArqueCajaSegundo;
+          ListDocumentoCuadreCajaArrayTercer = response.data.ListaMejorArqueCajaTercero;
+          ListDocumentoCuadreCajaArrayTercerDos = response.data.ListaMejorArqueCajaEnviarTercerDos;
+         //primer turno
+          for (const iterator in ListDocumentoCuadreCajaArrayPrimer) {
+            let objeto = {};
+            objeto.id_cajero =
+            ListDocumentoCuadreCajaArrayPrimer[iterator]["id"];
+            objeto.cajero =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["vendedor"];
+            objeto.fecha_emision =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["fecha_emision"];
+              objeto.turno =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["TURNO_1"];
+              objeto.saldo_efectivo = 60;
+              objeto.monto_caja =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["monto_caja"];
+              objeto.monto_tc =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["monto_tc"];
+              objeto.sum_total =
+              ListDocumentoCuadreCajaArrayPrimer[iterator]["sum_total"];
+              objeto.total_fisico = 0;
+              objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayPrimer[iterator]["existe"];
+
+            this.ListaDocumentoCuadreCaja.push(objeto);
+          }
+
+           //segundo turno
+           for (const iterator in ListDocumentoCuadreCajaArraySegundo) {
+            let objeto = {};
+            objeto.id_cajero =
+            ListDocumentoCuadreCajaArraySegundo[iterator]["id"];
+            objeto.cajero =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["vendedor"];
+            objeto.fecha_emision =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["fecha_emision"];
+              objeto.turno =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["TURNO_2"];
+              objeto.saldo_efectivo = 60;
+              objeto.monto_caja =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["monto_caja"];
+              objeto.monto_tc =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["monto_tc"];
+              objeto.sum_total =
+              ListDocumentoCuadreCajaArraySegundo[iterator]["sum_total"];
+              objeto.total_fisico = 0;
+              objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArraySegundo[iterator]["existe"];
+
+            this.ListaDocumentoCuadreCaja.push(objeto);
+          }
+
+
+          //tercer turno
+          for (const iterator in ListDocumentoCuadreCajaArrayTercer) {
+            let objeto = {};
+            objeto.id_cajero =
+            ListDocumentoCuadreCajaArrayTercer[iterator]["id"];
+            objeto.cajero =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["vendedor"];
+            objeto.fecha_emision =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["fecha_emision"];
+              objeto.turno =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["TURNO_3"];
+              objeto.saldo_efectivo = 60;
+              objeto.monto_caja =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["monto_caja"];
+              objeto.monto_tc =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["monto_tc"];
+              objeto.sum_total =
+              ListDocumentoCuadreCajaArrayTercer[iterator]["sum_total"];
+              objeto.total_fisico = 0;
+              objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayTercer[iterator]["existe"];
+
+            this.ListaDocumentoCuadreCaja.push(objeto);
+          }
+
+           //tercer turno dos
+           for (const iterator in ListDocumentoCuadreCajaArrayTercerDos) {
+            let objeto = {};
+            objeto.id_cajero =
+            ListDocumentoCuadreCajaArrayTercerDos[iterator]["id"];
+            objeto.cajero =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["vendedor"];
+            objeto.fecha_emision =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["fecha_emision"];
+              objeto.turno =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["TURNO_3_2"];
+              objeto.saldo_efectivo = 60;
+              objeto.monto_caja =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["monto_caja"];
+              objeto.monto_tc =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["monto_tc"];
+              objeto.sum_total =
+              ListDocumentoCuadreCajaArrayTercerDos[iterator]["sum_total"];
+              objeto.total_fisico = 0;
+              objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayTercerDos[iterator]["existe"];
+
+            this.ListaDocumentoCuadreCaja.push(objeto);
+          }
+
+ 
+
+
+
+      
+         // this.consultasValoresLocalesTodos();
+          this.loading = false;
+          //  that.valor = response.data.data;
+        })
+        .catch((error) => {
+          this.loading = false;
+          console.log("error del sistema" + error);
+          // clearInterval(this.progresCompras.interval);
+        });
+    },
+    
+  ModalArqueo(item){
+    console.log("arqueo",item);
+   
+    this.ListCuadre={
+        id:0,
+        fecha_emision:0,
+        id_cajero:0,
+        turno:0,
+        cajero:0,
+        id_bodega:this.ListaConsultaDocumentoCaducidad.bodega_id ,
+       id_bodega_sistema:this.ListaConsultaDocumentoCaducidad.bodega_id ,
+        saldo_efectivo:0,
+        monto_caja:0,
+        monto_tc:0,
+        sum_total:0,
+        total_fisico:0,
+        diferencia:0,
+        observacion:0,
+      };
+
+      if (item.total_fisico == ""  ) {
+        this.$swal("Copemarket!!!", "El Total fisico no debe ir vacio", "error");
+        return;
+      }
+
+      
+
+      this.ListCuadre={
+        id:0,
+        fecha_emision:item.fecha_emision,
+        id_cajero:item.id_cajero,
+        turno:item.turno,
+        cajero:item.cajero,
+        id_bodega:this.ListaConsultaDocumentoCaducidad.bodega_id ,
+        id_bodega_sistema:this.ListaConsultaDocumentoCaducidad.bodega_id ,
+       
+        saldo_efectivo:item.saldo_efectivo,
+        monto_caja:item.monto_caja,
+        monto_tc:item.monto_tc,
+        sum_total:item.sum_total,
+        total_fisico:item.total_fisico,
+        diferencia:item.diferencia,
+        //observacion:0,
+      };
+
+      this.ModelObservacion = true;
+
+    
+  },
+  GrabarArqueCaja(){
+    if (this.ListCuadre.observacion == "" || this.ListCuadre.observacion == 0 || this.ListCuadre.observacion == null) {
+        this.$swal("Copemarket!!!", "Ingrese la observacion", "error");
+        return;
+      }
+
+      let url =
+        this.$store.getters.getRuta +
+        "/modulos/admision/paciente/GrabarArqueo";
+
+       
+      // return;
+
+      //this.desproducto = tarea.producto.id:
+
+      axios
+        .post(url, this.ListCuadre)
+        .then((response) => {
+          console.log(response.data.data);
+          this.$swal("copemarket!!!", response.data.mensaje, "success");
+          // this.mensajeAler("Tarea registrada con éxito", true);
+          this.ModelObservacion = false;
+        
+          this.ListCuadre={
+            id:0,
+            fecha_emision:0,
+            id_cajero:0,
+            turno:0,
+            cajero:0,
+            //id_bodega:0,
+          // id_bodega_sistema:0,
+            saldo_efectivo:0,
+            monto_caja:0,
+            monto_tc:0,
+            sum_total:0,
+            total_fisico:0,
+            diferencia:0,
+            observacion:0,
+          };
+          this.consultasFechaArqueoCaja();
+          //  this.handleCreateEvent();
+          // this.itemsAdicional = response.data.data;
+        })
+        .catch((error) => {
+          let objeto = [];
+          objeto = Object.values(error.response.data.errors);
+          // for (let index = 0; index < objeto.length; index++) {
+          //   this.mensajeAler(objeto[index][0], false);
+          // }
+        });
+
+  },
     GenerarModalProductosFacturaCompra(item) {
       // console.log("producto",item);
       this.ListProductos = item.detalles;
@@ -1229,10 +1423,10 @@ export default {
 
           
 
-          console.log("ListMejorLocalVentasECopemarket",ListTotalVentasLocales);
-          console.log("ListMejorLocalVentasECopemarket",this.ListMejorLocalVentasECopemarket);
-          console.log("ListCantidadMejorLocalVentasCopemarket",this.ListCantidadMejorLocalVentasCopemarket);
-          console.log("LIstColorMejorLocalVentasCopemarket",this.LIstColorMejorLocalVentasCopemarket);
+          // console.log("ListMejorLocalVentasECopemarket",ListTotalVentasLocales);
+          // console.log("ListMejorLocalVentasECopemarket",this.ListMejorLocalVentasECopemarket);
+          // console.log("ListCantidadMejorLocalVentasCopemarket",this.ListCantidadMejorLocalVentasCopemarket);
+          // console.log("LIstColorMejorLocalVentasCopemarket",this.LIstColorMejorLocalVentasCopemarket);
          
          this.totalesProductoVentasLocales();
           this.loadingChart = false;
@@ -1489,6 +1683,7 @@ export default {
               ListDocumentoCuadreCajaArrayPrimer[iterator]["sum_total"];
               objeto.total_fisico = 0;
               objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayPrimer[iterator]["existe"];
 
             this.ListaDocumentoCuadreCaja.push(objeto);
           }
@@ -1513,6 +1708,7 @@ export default {
               ListDocumentoCuadreCajaArraySegundo[iterator]["sum_total"];
               objeto.total_fisico = 0;
               objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArraySegundo[iterator]["existe"];
 
             this.ListaDocumentoCuadreCaja.push(objeto);
           }
@@ -1538,6 +1734,7 @@ export default {
               ListDocumentoCuadreCajaArrayTercer[iterator]["sum_total"];
               objeto.total_fisico = 0;
               objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayTercer[iterator]["existe"];
 
             this.ListaDocumentoCuadreCaja.push(objeto);
           }
@@ -1562,6 +1759,7 @@ export default {
               ListDocumentoCuadreCajaArrayTercerDos[iterator]["sum_total"];
               objeto.total_fisico = 0;
               objeto.diferencia = 0;
+              objeto.existe =  ListDocumentoCuadreCajaArrayTercerDos[iterator]["existe"];
 
             this.ListaDocumentoCuadreCaja.push(objeto);
           }
@@ -1713,42 +1911,14 @@ export default {
           console.log("error del sistema" + error);
         });
     },
-    GetCentrosCostos() {
-      let url = this.$store.state.ApiContifico + "contabilidad/centro-costo/";
-
-      let _Lista = [];
-      const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, PUT, POST, DELETE, OPTIONS",
-        "Content-Type": "application/json",
-        Authorization: `YlL5LnVsxErqwus5bWJB3Uv8QUR8gVHHpkMvrVjqW3w`,
-      };
-
-      axios
-        .get(url, { headers: headers })
-        .then((response) => {
-          console.log("api retorno", response.data);
-          let objeto = {};
-        })
-        .catch((error) => {
-          console.log(error);
-          // let objeto = [];
-          // objeto = Object.values(error.response.data.errors);
-          // for (
-          //     let index = 0;
-          //     index < objeto.length;
-          //     index++
-          // ) {
-          //     this.mensajeAler(objeto[index][0], false);
-          // }
-        });
-    },
-
+ 
     /**contifinco fin */
     generar() {},
 
     Consultaanio(id) {
       this.ListaConsultaDocumentoCaducidad.bodega_id = id.id;
+      this.ListCuadre.id_bodega_sistema =  id.id;
+      this.ListCuadre.id_bodega =  id.id;
 
       //console.log("anio click",this.ListaConsultaDocumentoCaducidad.bodega_id);
 
